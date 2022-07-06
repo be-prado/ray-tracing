@@ -7,6 +7,7 @@
 
 #include "rtweekend.h"
 
+#include "camera.h"
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
@@ -35,6 +36,7 @@ int main() {
 	const auto aspect_ratio = 16.0 / 9.0;
 	const int image_width = 400;
 	const int image_height = static_cast<int>(image_width / aspect_ratio);
+	const int samples_per_pixel = 100;
 
 	// World
 	hittable_list world;
@@ -42,14 +44,7 @@ int main() {
 	world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
 	// Camera
-	auto viewport_height = 2.0;
-	auto viewport_width = aspect_ratio * viewport_height;
-	auto focal_length = 1.0;
-
-	auto origin = point3(0, 0, 0);
-	auto horizontal = vec3(viewport_width, 0, 0);
-	auto vertical = vec3(0, viewport_height, 0);
-	auto lower_left_corner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focal_length);
+	camera cam;
 
 
 	cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -59,15 +54,21 @@ int main() {
 	for (int j = image_height - 1; j >= 0; --j) {
 		cerr << "\rScanning lines remaning: " << j << ' ' << flush;
 		for (int i = 0; i <= image_width - 1; ++i) {
-			// compute horizontal and vertical position of current pixel relative
-			// to the left and bottom of the image, respectively
-			auto u = double(i) / (image_width - 1);
-			auto v = double(j) / (image_height - 1);
-			// create ray from the camera to the pixel
-			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-			// compute ray color from the closest object it hits in the world
-			color pixel_color = ray_color(r, world);
-			write_color(cout, pixel_color);
+			color pixel_color(0, 0, 0);
+			// sample selected pixel
+			for (int k = 0; k < samples_per_pixel; ++k) {
+				// compute random variation of horizontal and vertical position of current 
+				// pixel relative to the left and bottom of the image, respectively
+				auto u = (i + random_double()) / (image_width - 1);
+				auto v = (j + random_double()) / (image_height - 1);
+				// create ray from the camera to the pixel
+				ray r = cam.get_ray(u, v);
+				// update pixel color
+				pixel_color += ray_color(r, world);
+
+			}
+			// write down normalized pixel_color
+			write_color(cout, pixel_color, samples_per_pixel);
 		}
 	}
 
