@@ -46,6 +46,14 @@ public:
     double length_squared() const {
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
+    // compute random vector with components in [0,1)
+    inline static vec3 random() {
+        return vec3(random_double(), random_double(), random_double());
+    }
+    // compute random vector with components in [min,max)
+    inline static vec3 random(double min, double max) {
+        return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+    }
 
 public:
     double e[3];
@@ -58,6 +66,7 @@ using color = vec3;    // RGB color
 #endif
 
 // vec3 Utility Functions
+
 
 inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
@@ -101,4 +110,27 @@ inline vec3 cross(const vec3& u, const vec3& v) {
 
 inline vec3 unit_vector(vec3 v) {
     return v / v.length();
+}
+
+// compute random vector in unit sphere
+inline vec3 random_in_unit_sphere() {
+    while (true) {
+        auto p = vec3::random(-1, 1);
+        // check if p is in the unit sphere
+        if (p.length_squared() >= 1) continue;
+        return p;
+    }
+}
+// compute random unit vector
+inline vec3 random_unit_vector() {
+    return unit_vector(random_in_unit_sphere());
+}
+// compute random vectorlying on a hemisphere of the unit ball specified 
+// by a normal vector
+inline vec3 random_in_hemisphere(const vec3& normal) {
+    vec3 p = random_in_unit_sphere();
+    // check if p is in the hemisphere specified by the normal direction
+    if (dot(p, normal) < 0.0)
+        p = -p;
+    return p;
 }
