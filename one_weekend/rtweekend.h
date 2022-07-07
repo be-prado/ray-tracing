@@ -3,6 +3,7 @@
 * Header file that stores:
 * 1) useful constants - pi, infinity.
 * 2) useful functions - degrees_to_radians, random_double, clamp.
+* 4) common structures - hit_record
 * 3) common headers - ray.h, vec3.h
 */
 
