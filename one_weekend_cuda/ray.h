@@ -1,3 +1,7 @@
+/*
+* This file defines the ray class.
+*/
+
 #pragma once
 
 #ifndef RAY_H
@@ -12,7 +16,7 @@ public:
 
 	__device__ point3 origin() const { return orig; }
 	__device__ vec3 direction() const { return dir; }
-
+	// This computes where the ray is at parameter t
 	__device__ point3 at(float t) const {
 		return orig + t * dir;
 	}

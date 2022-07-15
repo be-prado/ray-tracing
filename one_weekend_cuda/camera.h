@@ -16,6 +16,7 @@ public:
         float aperture,
         float focus_distance
     ) {
+        
         float theta = degrees_to_radians(vfov);
         float h = tan(theta / 2);
         float viewport_height = 2.0 * h;
@@ -31,6 +32,7 @@ public:
         lower_left_corner = origin - horizontal / 2 - vertical / 2 - focus_distance * w;
 
         lens_radius = aperture / 2;
+        
     }
 
     __device__ ray get_ray(float const s, float const t, curandState* rand_state) {

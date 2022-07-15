@@ -1,3 +1,7 @@
+/*
+* This file defines an example of a hittable, namely a sphere.
+*/
+
 #pragma once
 
 #ifndef SPHERE_H

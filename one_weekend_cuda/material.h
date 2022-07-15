@@ -1,3 +1,10 @@
+/*
+* This file stores material classes that dictate how a ray scatters when bouncing with a 
+* material.
+* The file contains classes for Lambertian materials (e.g. rubber), reflective materials (e.g. metal)
+* and dielectric materials (e.g. glass).
+*/
+
 #pragma once
 
 #ifndef MATERIAL_H
@@ -20,13 +27,13 @@ class lambertian : public material {
 public:
 	__device__ lambertian(const color& a) : albedo(a) {}
 
-	__device__ virtual bool scatter(
+	__device__ bool scatter(
 		const ray& r_in, const hit_record& rec, color& attenuation,
 		ray& scattered, curandState* rand_state)
 		const override {
+
 		//auto scatter_direction = rec.normal + random_unit_vector();
 		auto scatter_direction = random_in_hemisphere(rec.normal, rand_state);
-
 		// catch degenerate scatter direction
 		if (scatter_direction.near_zero())
 			scatter_direction = rec.normal;
@@ -51,6 +58,7 @@ public:
 		const ray& r_in, const hit_record& rec, color& attenuation, 
 		ray& scattered, curandState* rand_state)
 		const override {
+
 		vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
 
 		scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere(rand_state));
@@ -75,13 +83,13 @@ public:
 		const override {
 
 		attenuation = color(1.0, 1.0, 1.0);
-		float refraction_ratio = rec.front_face ? (1.0 / ri) : ri;
+		float refraction_ratio = rec.front_face ? (1.0f / ri) : ri;
 
 		vec3 out_direction;
 		vec3 unit_direction = unit_vector(r_in.direction());
-		float cos_theta = fmin(dot(unit_direction, -rec.normal), 1.0);
+		float cos_theta = fminf(dot(unit_direction, -rec.normal), 1.0f);
 		float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-		bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+		bool cannot_refract = refraction_ratio * sin_theta > 1.0f;
 
 		// check if there is a solution to Snell's law for refraction and use
 		// Schlick's approximation for reflectance to see if ray is reflected

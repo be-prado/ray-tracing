@@ -1,3 +1,8 @@
+/*
+* This file defines the blueprint for a hittable class. The class has a function that
+* determines if a ray hits the object and stores the hit information in a hit record.
+*/
+
 #pragma once
 
 #ifndef HITTABLE_H
@@ -7,6 +12,7 @@
 
 class material;
 
+// This stores information from when a ray hits an object
 struct hit_record {
 	point3 p;
 	vec3 normal;

@@ -52,7 +52,6 @@ __device__ bool hittable_list::hit(const ray& r, float t_min, float t_max, hit_r
 			rec = temp_rec;
 		}
 	}
-
 	return hit_anything;
 }
 

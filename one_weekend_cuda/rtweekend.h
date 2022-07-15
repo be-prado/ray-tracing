@@ -1,6 +1,3 @@
-#pragma once
-
-
 /*
 * Header file that stores:
 * 1) useful constants - pi, infinity.
@@ -35,22 +32,17 @@ __device__ const float infinity = std::numeric_limits<float>::infinity();
 #define M_PI 3.1415926535897932385f
 #endif // !M_PI
 
-
-
 // Utility functions
 __host__ __device__ inline float degrees_to_radians(float degrees) {
 	return M_PI * degrees / 180.0f;
 }
 // random float in [0, 1)
 __device__ inline float random_float(curandState* rand_state) {
-	curand_init(0, 0, 0, rand_state);
-
 	float result = curand_uniform(rand_state);
 
 	while (result == 1.0f) {
 		result = curand_uniform(rand_state);
 	}
-
 	return result;
 }
 // random float in [min,max)

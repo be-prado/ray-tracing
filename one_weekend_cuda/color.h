@@ -1,3 +1,7 @@
+/*
+* This file adds the write_color function to the color class.
+*/
+
 #pragma once
 
 #ifndef COLOR_H

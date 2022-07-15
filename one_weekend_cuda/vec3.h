@@ -1,3 +1,8 @@
+/*
+* This file defines a vector class with many useful vector operations and
+* functions. It also defines color and point3 as aliases for the vec3 class.
+*/
+
 #pragma once
 
 #ifndef VEC3_H
@@ -37,6 +42,13 @@ public:
 
     __host__ __device__ vec3& operator/=(const float t) {
         return *this *= 1 / t;
+    }
+
+    __host__ __device__ vec3& operator*=(const vec3& v) {
+        e[0] *= v.x();
+        e[1] *= v.y();
+        e[2] *= v.z();
+        return *this;
     }
 
     __host__ __device__ float length() const {
@@ -156,8 +168,6 @@ __device__ inline vec3 random_in_unit_disk(curandState* rand_state) {
     }
 }
 /*___________________END OF RANDOM VECTOR GENERATORS_______________________*/
-
-
 
 // compute the reflected ray from a reflected material
 __host__ __device__ inline vec3 reflect(const vec3& v, const vec3& n) {
